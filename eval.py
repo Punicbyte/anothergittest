@@ -25,12 +25,22 @@ def answer_removed(text: str) -> str:
     lines = [ln for ln in text.splitlines() if ln.strip()]
     if not lines: return text
     last = lines[-1].lower()
-    if "answer" in last or "therefore" in last or re.search(r"\bso\b.*\d+", last):
+    ANSWERY_LAST_LINE = re.compile(
+    r"""
+    ^
+    \s*(?:final\s+)?answer\s*[:\-]         
+    | \btherefore\b                        
+    | ^\s*so\b                             '
+    """,
+    re.IGNORECASE | re.VERBOSE,
+    )
+    SHORT_ANSWERISH = re.compile(r"\b(\d+|[A-E]|true|false)\b", re.IGNORECASE)
+    if ANSWERY_LAST_LINE.search(last) and SHORT_ANSWERISH.search(last):
         return "\n".join(lines[:-1])
     return text
 
 def apply_stress(ex: dict, stress: str) -> dict:
-    ex = json.loads(json.dumps(ex))  # deep copy
+    ex = json.loads(json.dumps(ex))   
     for c in ex["candidates"]:
         if stress == "number_masked":
             c["text"] = number_mask(c["text"])

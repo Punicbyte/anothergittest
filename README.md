@@ -41,3 +41,5 @@ python eval.py --data data/your_data.jsonl --scorer model
 This kit expects per-question candidate sets with label in {"good","srda","mixed","wrong"}.
 We auto-generate all pairs (good vs bad) within the same question for pairwise accuracy.
 See `data/schema.md` for details.
+
+More details please see the Varsh Proprosals Google doc
